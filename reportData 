@@ -1,0 +1,63 @@
+"week": "Week 1",
+    "project": "Product Management System",
+    "status": "On Track",
+    "highlights": [
+        "Completed user authentication module",
+        "Integrated payment gateway",
+        "Fixed bugs in the reporting module"
+    ],
+    "nextSteps": [
+        "Start development of the dashboard",
+        "Conduct user testing",
+        "Prepare for the next sprint planning"
+    ],
+    "issues": [
+        "Delay in API integration",
+        "Need more resources for frontend development"
+    ]
+}
+const fs = require('fs');
+const nodemailer = require('nodemailer');
+
+// Read report data from JSON file
+const reportData = JSON.parse(fs.readFileSync('reportData.json', 'utf8'));
+
+// Generate HTML report
+const generateReport = (data) => {
+    return `
+        <h2>${data.project} - ${data.week}</h2>
+        <p><strong>Status:</strong> ${data.status}</p>
+        <h3>Highlights</h3>
+        <ul>${data.highlights.map(item => `<li>${item}</li>`).join('')}</ul>
+        <h3>Next Steps</h3>
+        <ul>${data.nextSteps.map(item => `<li>${item}</li>`).join('')}</ul>
+        <h3>Issues</h3>
+        <ul>${data.issues.map(item => `<li>${item}</li>`).join('')}</ul>
+    `;
+};
+
+// Save the report as an HTML file
+fs.writeFileSync('weeklyReport.html', generateReport(reportData));
+
+// Send the report via email
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'Whitecloudmountain59@gmail.com',
+        pass: 'wStxv3st'
+    }
+});
+
+const mailOptions = {
+    from: 'your-email@gmail.com',
+    to: 'recipient-Whitecloudmountain59@gmail.com',
+    subject: 'Weekly Report',
+    html: generateReport(reportData)
+};
+
+transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+        return console.log(error);
+    }
+    console.log('Report sent: ' + info.response);
+});
